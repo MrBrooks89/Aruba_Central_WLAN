@@ -1,5 +1,6 @@
 import os
 import urllib.parse
+import json
 from dotenv import load_dotenv
 from pycentral.base import ArubaCentralBase
 from pprint import pprint
@@ -24,6 +25,17 @@ central_info = {
 }
 ssl_verify = True
 central = ArubaCentralBase(central_info=central_info, ssl_verify=ssl_verify)
+
+
+def ensure_dict(data):
+    """Helper to ensure API response is a dictionary."""
+    if isinstance(data, str):
+        try:
+            return json.loads(data)
+        except json.JSONDecodeError:
+            return {"code": 500, "msg": data}
+    return data
+
 
 # List of group names, GUIDs, or serial numbers
 group_identifiers = [
@@ -57,12 +69,13 @@ for group_identifier in group_identifiers:
     )
     apiMethod = "PATCH"
 
-    print(f"Updating SSID '{ssid_to_update}' in group: {group_identifier}")
+    print(f"\nUpdating SSID '{ssid_to_update}' in group: {group_identifier}")
 
     try:
         base_resp = central.command(
             apiMethod=apiMethod, apiPath=apiPath, apiData=wlan_body
         )
+        base_resp = ensure_dict(base_resp)
 
         # Check if the token is expired (401) and refresh it
         if isinstance(base_resp, dict) and base_resp.get("code") == 401:
@@ -74,7 +87,12 @@ for group_identifier in group_identifiers:
                 base_resp = central.command(
                     apiMethod=apiMethod, apiPath=apiPath, apiData=wlan_body
                 )
+                base_resp = ensure_dict(base_resp)
 
-        # pprint(base_resp)
+        if base_resp.get("code") == 200:
+            print(f"  [SUCCESS] Group {group_identifier} updated.")
+        else:
+            print(f"  [FAILED] Group {group_identifier} failed: {base_resp.get('code')} - {base_resp.get('msg')}")
+
     except Exception as e:
         print(f"Error occurred updating group {group_identifier}: {e}")
