@@ -44,8 +44,8 @@ wlan_body = {
         "type": "guest",
         "access_rules": [{"action": "allow"}],
         "captive_profile_name": "Captive Portal",
-        "bandwidth_limit_peruser_up": "1512",
-        "bandwidth_limit_peruser_down": "1512",
+        "bandwidth_limit_peruser_up": "3072",
+        "bandwidth_limit_peruser_down": "3072",
     }
 }
 
