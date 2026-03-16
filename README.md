@@ -24,7 +24,7 @@ Scripts for automating WLAN/SSID management in Aruba Central.
 - **Get Groups**: `python GetGroups.py` (Edit script limit to desired number currently set to 20)
 - **Get Simplified WLAN Details**: `python GetWLAN.py` (Edit script to change group/SSID)
 - **Get Full WLAN Details**: `python GetWLANFull.py` (Edit script to change group/SSID - outputs filtered non-empty values)
-- **Batch Edit SSIDs**: `python EditExistingWLANLoop.py`
+- **Batch Edit SSIDs**: `python EditExistingWLANLoop.py` (Edit script to change group/SSID and SSID paramters)
 
 ## Architecture
 This project uses a modular design:
