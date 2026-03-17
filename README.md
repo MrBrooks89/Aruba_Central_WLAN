@@ -21,15 +21,20 @@ Scripts for automating WLAN/SSID management in Aruba Central.
    ```
 
 ## Usage
-- **Get Groups**: `python GetGroups.py` (Edit script limit to desired number currently set to 20)
-- **Get Simplified WLAN Details**: `python GetWLAN.py` (Edit script to change group/SSID)
-- **Get Full WLAN Details**: `python GetWLANFull.py` (Edit script to change group/SSID - outputs filtered non-empty values)
-- **Batch Edit SSIDs**: `python EditExistingWLANLoop.py` (Edit script to change group/SSID and SSID paramters)
+All scripts (except `GetGroups.py`) now use command-line arguments. Use `--help` on any script for full details.
 
-## Architecture
-This project uses a modular design:
-- **`utils.py`**: Handles shared configuration and automatic token refreshing. It updates the `.env` file automatically when tokens expire.
-- **`pycentral`**: All Aruba Central configuration commands are performed via the `pycentral` library for consistency and better error handling.
+- **Get All Groups**: `python GetGroups.py`
+  - *Automatically loops through all groups in your account using pagination.*
+- **Get Simplified WLAN Details**: `python GetWLAN.py --group "Store 028" --ssid "Public WiFi"`
+  - *Retrieves a clean view of WLAN settings for a specific SSID.*
+- **Get Full WLAN Details**: `python GetWLANFull.py --group "Store 028" --ssid "RetailWiFi"`
+  - *Retrieves the full WLAN configuration (filtered for non-empty values).*
+- **Batch Edit SSIDs**: `python EditExistingWLANLoop.py --ssid "Guest WiFi" --groups "Store 001,Store 002"`
+  - *Updates SSID settings across the specified comma-separated list of groups OR a .txt file (e.g., `--groups my_stores.txt` with one group per line).*
+*IMPORTANT:* *You must manually edit the wlan_body dictionary within EditExistingWLANLoop.py to set the desired bandwidth, captive portal, or access rules before execution. To discover all available fields, refer to the official documentation or run GetWLANFull.py. For a concise list of common fields, use GetWLAN.py.*
+## Key Features
+- **Automatic Pagination**: `GetGroups.py` automatically handles accounts with more than 100 groups.
+- **Workflow Flexibility**: Use `GetWLAN.py` to grab a known-good configuration, copy the `wlan_body` output, and paste it into `EditExistingWLANLoop.py` for batch updates.
 
 ## Official Documentation
 - **Aruba Central Developer Portal**: [https://developer.arubanetworks.com/central/docs/python-using-api-sdk](https://developer.arubanetworks.com/central/docs/python-using-api-sdk)

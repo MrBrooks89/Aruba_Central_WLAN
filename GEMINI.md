@@ -6,11 +6,10 @@ This project contains scripts for automating configuration changes in Aruba Cent
 
 ### Core Files
 - `utils.py`: Shared utility script that manages OAuth2 token refreshing and `.env` updates.
-- `EditExistingWLANLoop.py`: Script for updating SSID configurations across multiple groups using `pycentral`.
-- `GetWLAN.py`: Utility script to retrieve a **simplified/clean** view of WLAN configurations for a specific SSID in a group.
-- `GetWLANFull.py`: Utility script to retrieve the **full (100+ fields) and filtered** WLAN configuration for a specific SSID, extracting only non-empty values for easier consumption.
-- `GetGroups.py`: Utility script to list Aruba Central groups.
-- `.env`: Contains sensitive API credentials and tokens.
+- `EditExistingWLANLoop.py`: Script for updating SSID configurations across multiple groups. **Requires `--ssid` and `--groups` arguments.**
+- `GetWLAN.py`: Utility script to retrieve a **simplified/clean** view of WLAN configurations. **Requires `--group` and `--ssid` arguments.**
+- `GetWLANFull.py`: Utility script to retrieve the **full (100+ fields)** WLAN configuration. **Requires `--group` and `--ssid` arguments.**
+- `GetGroups.py`: Utility script to list **all** Aruba Central groups using automatic pagination.
 
 ### Authentication Flow
 The project uses OAuth2.0 with a "Refresh-on-401" strategy:
@@ -20,19 +19,15 @@ The project uses OAuth2.0 with a "Refresh-on-401" strategy:
 4. The `.env` file is updated automatically using `dotenv.set_key`.
 5. The script updates its `ArubaCentralBase` object with the new token and retries the request.
 
-## Reference Documentation
-For all API schema, endpoints, and SDK usage, refer to the official documentation:
-- **Aruba Central API Reference**: [https://developer.arubanetworks.com/central/reference/apifull_wlanupdate_wlan](https://developer.arubanetworks.com/central/reference/apifull_wlanupdate_wlan)
-- **Python SDK Guide**: [https://developer.arubanetworks.com/central/docs/python-using-api-sdk](https://developer.arubanetworks.com/central/docs/python-using-api-sdk)
+## Usage Guidelines
 
-## Environment Variables
-Ensure these are present in your `.env` file:
-- `ARUBA_ACCESS_TOKEN`: Current bearer token.
-- `ARUBA_REFRESH_TOKEN`: Token used to generate a new access token.
-- `ARUBA_CLIENT_ID`: API Gateway Client ID.
-- `ARUBA_CLIENT_SECRET`: API Gateway Client Secret.
+### Command Line Arguments
+Most scripts now require arguments to avoid manual code editing:
+- `python GetWLAN.py --group "GroupName" --ssid "SSIDName"`
+- `python EditExistingWLANLoop.py --ssid "SSIDName" --groups "Group1,Group2"`
+- `python GetGroups.py` (Lists all groups)
 
-## Development Guidelines
+Use the `--help` flag on any script to see available options.
 
 ### API Constraints
 - **Base URL**: Managed in `utils.py` (default: `https://apigw-prod2.central.arubanetworks.com`)

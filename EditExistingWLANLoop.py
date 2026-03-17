@@ -1,12 +1,25 @@
 import os
 import urllib.parse
 import json
+import argparse
 from dotenv import load_dotenv
 from pycentral.base import ArubaCentralBase
 from pprint import pprint
 
 # Import shared constants and refresh function
 from utils import refresh_aruba_token, BASE_URL, CLIENT_ID, CLIENT_SECRET
+
+# Set up command-line arguments
+parser = argparse.ArgumentParser(
+    description="Update SSID configuration across multiple Aruba Central groups. "
+                "NOTE: You must still manually edit the 'wlan_body' dictionary inside this script "
+                "to define the specific settings (bandwidth, rules, etc.) you want to apply."
+)
+parser.add_argument("--ssid", required=True, help="SSID name to update")
+parser.add_argument("--groups", required=True, 
+                    help="Comma-separated list of group names (e.g., 'Store 001,Store 002') "
+                         "OR a path to a .txt file containing one group name per line.")
+args = parser.parse_args()
 
 load_dotenv()
 
@@ -36,77 +49,23 @@ def ensure_dict(data):
             return {"code": 500, "msg": data}
     return data
 
+# Parse group list from required argument
+if args.groups.endswith(".txt"):
+    if not os.path.isfile(args.groups):
+        raise FileNotFoundError(f"Group file not found: {args.groups}")
+    with open(args.groups, "r") as f:
+        # Read lines, strip whitespace, and ignore empty lines
+        group_identifiers = [line.strip() for line in f if line.strip()]
+    print(f"Loaded {len(group_identifiers)} groups from {args.groups}")
+else:
+    group_identifiers = [g.strip() for g in args.groups.split(",")]
 
-# List of group names, GUIDs, or serial numbers
-group_identifiers = [
-    "Store 002",
-    "Store 003",
-    "Store 004",
-    "Store 005",
-    "Store 006",
-    "Store 007",
-    "Store 008",
-    "Store 009",
-    "Store 011",
-    "Store 013",
-    "Store 015",
-    "Store 017",
-    "Store 018",
-    "Store 019",
-    "Store 020",
-    "Store 021",
-    "Store 022",
-    "Store 024",
-    "Store 025",
-    "Store 026",
-    "Store 028",
-    "Store 030",
-    "Store 035",
-    "Store 036",
-    "Store 037-470",
-    "Store 039",
-    "Store 045",
-    "Store 047",
-    "Store 049",
-    "Store 050",
-    "Store 051",
-    "Store 054",
-    "Store 056",
-    "Store 060",
-    "Store 061",
-    "Store 064",
-    "Store 066",
-    "Store 067",
-    "Store 068",
-    "Store 071",
-    "Store 075",
-    "Store 078",
-    "Store 079",
-    "Store 080",
-    "Store 082",
-    "Store 089",
-    "Store 094",
-    "Store 097",
-    "Store 107",
-    "Store 108",
-    "Store 109",
-    "Store 110",
-    "Store 118",
-    "Store 119",
-    "Store 125",
-    "Store 126",
-    "Store 127",
-    "Store 133",
-    "Store 137",
-    "Store 138",
-    "Store 139",
-]
-
-# Specify the SSID to update
-ssid_to_update = "Super1Foods Public WIFI"
+# Specify the SSID to update from command line
+ssid_to_update = args.ssid
 encoded_ssid_to_update = urllib.parse.quote(ssid_to_update)
 
 # Define the WLAN configuration body
+# NOTE: You can still edit this part of the code if you need to change the bandwidth or rules
 wlan_body = {
     "wlan": {
         "essid": ssid_to_update,

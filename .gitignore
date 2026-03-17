@@ -1,4 +1,8 @@
 .aruba/
 .env
 .mypy_cache
+super1_groups.txt
+fresh_groups.txt
+springmarket_groups.txt
+brookshires_groups.txt
 __pycache__/

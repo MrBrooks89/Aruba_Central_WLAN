@@ -1,10 +1,17 @@
 # Import necessary modules
 import os
+import argparse
 from dotenv import load_dotenv
 from pycentral.base import ArubaCentralBase
 
 # Import shared constants and refresh function
 from utils import refresh_aruba_token, BASE_URL, CLIENT_ID, CLIENT_SECRET
+
+# Set up command-line arguments (even if none, for --help support)
+parser = argparse.ArgumentParser(
+    description="Fetch all group names from Aruba Central using pagination."
+)
+args = parser.parse_args()
 
 load_dotenv()
 
@@ -58,13 +65,13 @@ try:
             msg = base_resp.get("msg", {})
             groups_batch = msg.get("data", [])
             total_groups = msg.get("total", 0)
-            
+
             all_groups.extend(groups_batch)
-            
+
             # If we've collected all groups or if the last batch was empty, exit
             if len(all_groups) >= total_groups or not groups_batch:
                 break
-            
+
             # Increment offset for next page
             offset += limit
         else:
@@ -73,13 +80,15 @@ try:
 
     # Clean up results for the end user
     if all_groups:
-        print(f"\n--- Aruba Central Groups (Showing {len(all_groups)} of {total_groups}) ---")
+        print(
+            f"\n--- Aruba Central Groups (Showing {len(all_groups)} of {total_groups}) ---"
+        )
         for group_info in all_groups:
             # Each entry in 'data' is a list [GroupName]
-            print(f' "{group_info[0]}", ')
+            print(f" {group_info[0]} ")
         print("-" * 50)
     elif not all_groups and total_groups == 0:
-         print("\nNo groups found in Aruba Central.")
+        print("\nNo groups found in Aruba Central.")
     else:
         print(f"Error fetching groups: {base_resp}")
 

@@ -1,13 +1,19 @@
-# Import necessary modules
+import argparse
 import urllib.parse
 import os
+import json
 from dotenv import load_dotenv
 from pycentral.base import ArubaCentralBase
 from pprint import pprint
-import json  # Added for json.dumps
 
 # Import shared constants and refresh function from project utils
 from utils import refresh_aruba_token, BASE_URL, CLIENT_ID, CLIENT_SECRET
+
+# Set up command-line arguments
+parser = argparse.ArgumentParser(description="Get WLAN configuration for a specific SSID in an Aruba Central group.")
+parser.add_argument("--group", required=True, help="Aruba Central group name")
+parser.add_argument("--ssid", required=True, help="SSID name to fetch configuration for")
+args = parser.parse_args()
 
 load_dotenv()
 
@@ -27,9 +33,9 @@ central_info = {
 ssl_verify = True
 central = ArubaCentralBase(central_info=central_info, ssl_verify=ssl_verify)
 
-# Specify the group name and the specific SSID name
-group_identifier = "Store 028"
-ssid_name = "Brookshires Public WiFi"
+# Use values from command-line arguments
+group_identifier = args.group
+ssid_name = args.ssid
 
 encoded_group_identifier = urllib.parse.quote(group_identifier)
 encoded_ssid_name = urllib.parse.quote(ssid_name)
@@ -49,8 +55,6 @@ try:
             central.central_info["token"]["access_token"] = new_token
             # Retry the original request
             base_resp = central.command(apiMethod=apiMethod, apiPath=apiPath)
-
-    # Debug print removed, focusing on copy-paste format
 
     # Prepare for clean, copy-paste friendly output
     if isinstance(base_resp, dict) and base_resp.get("code") == 200:
