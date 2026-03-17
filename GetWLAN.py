@@ -29,7 +29,7 @@ central = ArubaCentralBase(central_info=central_info, ssl_verify=ssl_verify)
 
 # Specify the group name and the specific SSID name
 group_identifier = "Store 028"
-ssid_name = "RetailWiFi"
+ssid_name = "Brookshires Public WiFi"
 
 encoded_group_identifier = urllib.parse.quote(group_identifier)
 encoded_ssid_name = urllib.parse.quote(ssid_name)
