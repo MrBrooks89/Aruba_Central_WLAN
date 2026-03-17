@@ -31,7 +31,7 @@ All scripts (except `GetGroups.py`) now use command-line arguments. Use `--help`
   - *Retrieves the full WLAN configuration (filtered for non-empty values).*
 - **Batch Edit SSIDs**: `python EditExistingWLANLoop.py --ssid "Public WiFi" --groups "Group1,Group2" --wlan_file wlan_body.txt`
   - *Updates SSID settings across the specified comma-separated list of groups OR a .txt file (e.g., `--groups my_groups.txt` with one group per line). This requires a JSON file containing the WLAN configuration settings.*
-*IMPORTANT:* *You must provide a JSON file (e.g., `wlan_body.txt`) with the desired settings (bandwidth, captive portal, access rules, etc.) using the `--wlan_file` argument. If you don't have one, use the provided `wlan_body.txt` example. To discover all available fields, run `GetWLANFull.py` or `GetWLAN.py`. You can also refer to the developer documentation*
+*IMPORTANT:* *You must provide a JSON file (e.g., `wlan_body.txt`) with the desired settings (bandwidth, captive portal, access rules, etc.) using the `--wlan_file` argument. If you don't have one, use the provided `wlan_body.txt` example. To discover all available fields, run `GetWLANFull.py` or `GetWLAN.py`. You can also refer to the developer documentation.*
 ## Key Features
 - **Automatic Pagination**: `GetGroups.py` automatically handles accounts with more than 100 groups.
 - **Workflow Flexibility**: Use `GetWLAN.py` to grab a known-good configuration, save it to a JSON file (e.g., `wlan_body.txt`), and use it with `EditExistingWLANLoop.py` for batch updates.
