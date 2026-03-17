@@ -54,7 +54,7 @@ try:
         print(f"\n--- Aruba Central Groups (Showing {len(groups)} of {total}) ---")
         for group_info in groups:
             # Each entry in 'data' is a list [GroupName]
-            print(f" • {group_info[0]}")
+            print(f' "{group_info[0]}", ')
         print("-" * 50)
     else:
         print(f"Error fetching groups: {base_resp}")
