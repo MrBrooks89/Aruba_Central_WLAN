@@ -12,13 +12,15 @@ from utils import refresh_aruba_token, BASE_URL, CLIENT_ID, CLIENT_SECRET
 # Set up command-line arguments
 parser = argparse.ArgumentParser(
     description="Update SSID configuration across multiple Aruba Central groups. "
-                "NOTE: You must still manually edit the 'wlan_body' dictionary inside this script "
-                "to define the specific settings (bandwidth, rules, etc.) you want to apply."
+                "NOTE: You must provide a JSON file (e.g., wlan_body.txt) "
+                "containing the SSID settings you want to apply using the --wlan_file argument."
 )
 parser.add_argument("--ssid", required=True, help="SSID name to update")
 parser.add_argument("--groups", required=True, 
                     help="Comma-separated list of group names (e.g., 'Store 001,Store 002') "
                          "OR a path to a .txt file containing one group name per line.")
+parser.add_argument("--wlan_file", required=True, 
+                    help="Path to a JSON file containing the WLAN configuration (e.g., 'wlan_body.txt')")
 args = parser.parse_args()
 
 load_dotenv()
@@ -64,18 +66,26 @@ else:
 ssid_to_update = args.ssid
 encoded_ssid_to_update = urllib.parse.quote(ssid_to_update)
 
-# Define the WLAN configuration body
-# NOTE: You can still edit this part of the code if you need to change the bandwidth or rules
-wlan_body = {
-    "wlan": {
-        "essid": ssid_to_update,
-        "type": "guest",
-        "access_rules": [{"action": "allow"}],
-        "captive_profile_name": "Super1 Captive Portal",
-        "bandwidth_limit_peruser_up": "3072",
-        "bandwidth_limit_peruser_down": "3072",
-    }
-}
+# Parse the WLAN configuration body from the JSON file
+if not os.path.isfile(args.wlan_file):
+    print("Sorry please provide wlan_body.txt with the requried fields if you don't have one use the example on the github repo.")
+    exit(1)
+
+try:
+    with open(args.wlan_file, "r") as f:
+        wlan_body = json.load(f)
+except (json.JSONDecodeError, IOError):
+    print("Sorry please provide wlan_body.txt with the requried fields if you don't have one use the example on the github repo.")
+    exit(1)
+
+# Ensure the SSID provided via --ssid is set in the configuration
+if "wlan" in wlan_body:
+    wlan_body["wlan"]["essid"] = ssid_to_update
+else:
+    # Handle the case where the JSON structure doesn't match the expected 'wlan' key
+    print("Error: The provided WLAN configuration file must contain a 'wlan' key.")
+    print("Sorry please provide wlan_body.txt with the requried fields if you don't have one use the example on the github repo.")
+    exit(1)
 
 # Loop through each group and make the API request
 for group_identifier in group_identifiers:

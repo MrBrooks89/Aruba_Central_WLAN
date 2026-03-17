@@ -1,4 +1,5 @@
 .aruba/
+my_wlan_body.txt
 .env
 .mypy_cache
 super1_groups.txt

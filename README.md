@@ -29,12 +29,12 @@ All scripts (except `GetGroups.py`) now use command-line arguments. Use `--help`
   - *Retrieves a clean view of WLAN settings for a specific SSID.*
 - **Get Full WLAN Details**: `python GetWLANFull.py --group "Store 028" --ssid "RetailWiFi"`
   - *Retrieves the full WLAN configuration (filtered for non-empty values).*
-- **Batch Edit SSIDs**: `python EditExistingWLANLoop.py --ssid "Guest WiFi" --groups "Store 001,Store 002"`
-  - *Updates SSID settings across the specified comma-separated list of groups OR a .txt file (e.g., `--groups my_stores.txt` with one group per line).*
-*IMPORTANT:* *You must manually edit the wlan_body dictionary within EditExistingWLANLoop.py to set the desired bandwidth, captive portal, or access rules before execution. To discover all available fields, refer to the official documentation or run GetWLANFull.py. For a concise list of common fields, use GetWLAN.py.*
+- **Batch Edit SSIDs**: `python EditExistingWLANLoop.py --ssid "Guest WiFi" --groups "Store 001,Store 002" --wlan_file wlan_body.txt`
+  - *Updates SSID settings across the specified comma-separated list of groups OR a .txt file (e.g., `--groups my_stores.txt` with one group per line). This requires a JSON file containing the WLAN configuration settings.*
+*IMPORTANT:* *You must provide a JSON file (e.g., `wlan_body.txt`) with the desired settings (bandwidth, captive portal, access rules, etc.) using the `--wlan_file` argument. If you don't have one, use the provided `wlan_body.txt` example or refer to the official GitHub repo. To discover all available fields, run `GetWLANFull.py` or `GetWLAN.py`.*
 ## Key Features
 - **Automatic Pagination**: `GetGroups.py` automatically handles accounts with more than 100 groups.
-- **Workflow Flexibility**: Use `GetWLAN.py` to grab a known-good configuration, copy the `wlan_body` output, and paste it into `EditExistingWLANLoop.py` for batch updates.
+- **Workflow Flexibility**: Use `GetWLAN.py` to grab a known-good configuration, save it to a JSON file (e.g., `wlan_body.txt`), and use it with `EditExistingWLANLoop.py` for batch updates.
 
 ## Official Documentation
 - **Aruba Central Developer Portal**: [https://developer.arubanetworks.com/central/docs/python-using-api-sdk](https://developer.arubanetworks.com/central/docs/python-using-api-sdk)

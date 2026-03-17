@@ -6,7 +6,8 @@ This project contains scripts for automating configuration changes in Aruba Cent
 
 ### Core Files
 - `utils.py`: Shared utility script that manages OAuth2 token refreshing and `.env` updates.
-- `EditExistingWLANLoop.py`: Script for updating SSID configurations across multiple groups. **Requires `--ssid` and `--groups` arguments.**
+- `EditExistingWLANLoop.py`: Script for updating SSID configurations across multiple groups. **Requires `--ssid`, `--groups`, and `--wlan_file` arguments.**
+- `wlan_body.txt`: Example JSON file containing the WLAN configuration (bandwidth, rules, etc.) to apply.
 - `GetWLAN.py`: Utility script to retrieve a **simplified/clean** view of WLAN configurations. **Requires `--group` and `--ssid` arguments.**
 - `GetWLANFull.py`: Utility script to retrieve the **full (100+ fields)** WLAN configuration. **Requires `--group` and `--ssid` arguments.**
 - `GetGroups.py`: Utility script to list **all** Aruba Central groups using automatic pagination.
@@ -24,7 +25,7 @@ The project uses OAuth2.0 with a "Refresh-on-401" strategy:
 ### Command Line Arguments
 Most scripts now require arguments to avoid manual code editing:
 - `python GetWLAN.py --group "GroupName" --ssid "SSIDName"`
-- `python EditExistingWLANLoop.py --ssid "SSIDName" --groups "Group1,Group2"`
+- `python EditExistingWLANLoop.py --ssid "SSIDName" --groups "Group1,Group2" --wlan_file "wlan_body.txt"`
 - `python GetGroups.py` (Lists all groups)
 
 Use the `--help` flag on any script to see available options.
