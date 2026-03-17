@@ -23,7 +23,8 @@ Scripts for automating WLAN/SSID management in Aruba Central.
 ## Usage
 All scripts (except `GetGroups.py`) now use command-line arguments. Use `--help` on any script for full details.
 
-- **Get All Groups**: ```
+- **Get All Groups**: 
+```
 python GetGroups.py
 ```
   - *Automatically loops through all groups in your account using pagination.*
