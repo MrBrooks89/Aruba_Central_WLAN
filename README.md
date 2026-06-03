@@ -1,8 +1,11 @@
+_Disclaimer: This project was made with the assitance of Gemini_
+
 # Aruba Central API Automation
 
 Scripts for automating WLAN/SSID management in Aruba Central.
 
 ## Setup
+
 1. Clone the repository.
 2. Create a `.env` file with your Aruba Central API credentials:
    ```env
@@ -21,32 +24,36 @@ Scripts for automating WLAN/SSID management in Aruba Central.
    ```
 
 ## Usage
+
 All scripts (except `GetGroups.py`) now use command-line arguments. Use `--help` on any script for full details.
 
-- **Get All Groups**: 
-   *Automatically loops through all groups in your account using pagination.*
-   ```
-   python GetGroups.py
-   ```
-- **Get Simplified WLAN Details**: 
-   *Retrieves a clean view of WLAN settings for a specific SSID.*
-   ```
-   python GetWLAN.py --group "Group1" --ssid "Public WiFi"
-   ```
-- **Get Full WLAN Details**: 
-   *Retrieves the full WLAN configuration (filtered for non-empty values).*
-   ```
-   python GetWLANFull.py --group "Group1" --ssid "Public WiFi"
-   ```
-- **Batch Edit SSIDs**: 
-   *Updates SSID settings across the specified comma-separated list of groups OR a .txt file (e.g., `--groups my_groups.txt` with one group per line). This requires a JSON file containing the WLAN configuration settings.*
-   ```
-   python EditExistingWLANLoop.py --ssid "Public WiFi" --groups "Group1,Group2" --wlan_file wlan_body.txt
-   ```
-**IMPORTANT:** *You must provide a JSON file (e.g., `wlan_body.txt`) with the desired settings (bandwidth, captive portal, access rules, etc.) using the `--wlan_file` argument. If you don't have one, use the provided `wlan_body.txt` example. To discover all available fields, run `GetWLANFull.py` or `GetWLAN.py`. You can also refer to the developer documentation.*
+- **Get All Groups**:
+  _Automatically loops through all groups in your account using pagination._
+  ```
+  python GetGroups.py
+  ```
+- **Get Simplified WLAN Details**:
+  _Retrieves a clean view of WLAN settings for a specific SSID._
+  ```
+  python GetWLAN.py --group "Group1" --ssid "Public WiFi"
+  ```
+- **Get Full WLAN Details**:
+  _Retrieves the full WLAN configuration (filtered for non-empty values)._
+  ```
+  python GetWLANFull.py --group "Group1" --ssid "Public WiFi"
+  ```
+- **Batch Edit SSIDs**:
+  _Updates SSID settings across the specified comma-separated list of groups OR a .txt file (e.g., `--groups my_groups.txt` with one group per line). This requires a JSON file containing the WLAN configuration settings._
+  ```
+  python EditExistingWLANLoop.py --ssid "Public WiFi" --groups "Group1,Group2" --wlan_file wlan_body.txt
+  ```
+  **IMPORTANT:** _You must provide a JSON file (e.g., `wlan_body.txt`) with the desired settings (bandwidth, captive portal, access rules, etc.) using the `--wlan_file` argument. If you don't have one, use the provided `wlan_body.txt` example. To discover all available fields, run `GetWLANFull.py` or `GetWLAN.py`. You can also refer to the developer documentation._
+
 ## Key Features
+
 - **Automatic Pagination**: `GetGroups.py` automatically handles accounts with more than 100 groups.
 - **Workflow Flexibility**: Use `GetWLAN.py` to grab a known-good configuration, save it to a JSON file (e.g., `wlan_body.txt`), and use it with `EditExistingWLANLoop.py` for batch updates.
 
 ## Official Documentation
+
 - **Aruba Central Developer Portal**: [https://developer.arubanetworks.com/central/docs/python-using-api-sdk](https://developer.arubanetworks.com/central/docs/python-using-api-sdk)
